@@ -1,154 +1,238 @@
 # Intermediate SQL - Sales Analysis
 
-Outline
+## Outline
+
 1. [Overview](#overview)
-2. [Business Questions](#business-questions)
-3. [Analysis Approach](#analysis-approach)
-    * [Customer Segmentation Analysis](#1-customer-segmentation-analysis)
-    * [Cohort Analysis](#2-cohort-analysis)
-    * [Customer Retention Analysis](#3-retention-analysis)
-4. [Strategic Recommendations](#strategic-recommendations)
-5. [Technical Details](#technical-details)
+2. [Skills Demonstrated](#skills-demonstrated)
+3. [Business Questions](#business-questions)
+4. [Analysis Approach](#analysis-approach)
+   - [Customer Segmentation Analysis](#1-customer-segmentation-analysis)
+   - [Cohort Analysis](#2-cohort-analysis)
+   - [Retention Analysis](#3-retention-analysis)
+5. [Strategic Recommendations](#strategic-recommendations)
+6. [Technical Details](#technical-details)
+7. [Acknowledgements](#acknowledgements)
 
 ---
 
 ## Overview
+
 Analysis of customer behavior, retention, and lifetime value for an e-commerce company to improve customer retention and maximize revenue.
 
+This project was completed as part of my Intermediate SQL learning journey using PostgreSQL, based on the material taught by [Luke Barousse](https://github.com/lukebarousse). Rather than passively following the course, I actively reproduced the analyses, practiced the queries independently, and expanded the business interpretation layer to strengthen both technical and analytical thinking.
+
+---
+
+## Skills Demonstrated
+
+- Window Functions
+- Common Table Expressions (CTEs)
+- Percentile Functions
+- Customer Segmentation
+- Cohort Analysis
+- Retention Analysis
+- Business KPI Analysis
+- PostgreSQL Analytics
+- Data Visualization
+- Analytical Storytelling
+- Business-Oriented Reporting
+
+---
+
 ## Business Questions
-1. **Customer segmentation**: Who are our most valuable customers?
-2. **Cohort analysis**: How do different customer groups generate revenue?
-3. **Retention analysis**: Who hasn't purchased recently?
+
+1. **Customer Segmentation:** Who are the company's most valuable customers?
+2. **Cohort Analysis:** How do different customer groups generate revenue over time?
+3. **Retention Analysis:** Which customers are no longer actively purchasing?
+
+---
 
 ## Analysis Approach
 
-### 1. Customer Segmentation Analysis
+# 1. Customer Segmentation Analysis
 
-- Segmented the customer base into three distinct tiers using Percentile Functions ($25^{th}$ and $75^{th}$ percentiles) to objectively define Low, Mid, and High LTV. 
+- Segmented the customer base into three distinct tiers using percentile functions (25th and 75th percentiles) to objectively define Low, Mid, and High LTV customers.
 - Quantified revenue concentration by calculating the percentage of total company revenue contributed by each LTV segment.
-- Benchmarked performance metrics across groups, comparing average lifetime value against customer population counts to identify the most and least profitable segments.
+- Benchmarked performance metrics across groups by comparing average lifetime value against customer population counts to identify the most and least profitable segments.
 
 💻 Query: [1_customer_segmentation.sql](/1_customer_segmentation.sql)
 
-#### Visualization
+## Visual Analysis
 
 ![Customer Segmentation](/images/1_customer_segmentation_donut_chart.png)
-> The top quartile of customers ("High LTV") generates over $65\%$ of company revenue, highlighting a critical dependence on a small, premium segment.
+
+> The top quartile of customers ("High LTV") generates over 65% of company revenue, highlighting a critical dependence on a small premium segment.
 
 ![Strategic LTV Analysis](/images/1_customer_segmentation_strategic_ltv_analysis.png)
-> This Pareto analysis confirms that High and Mid LTV tiers combined constitute nearly $98\%$ of company value, visually justifying a strategy of automated-only engagement for the non-performing Low-LTV segment.
 
-***
+> This Pareto analysis confirms that High and Mid LTV tiers combined constitute nearly 98% of company value, visually supporting a strategy of automated-only engagement for the low-performing Low-LTV segment.
 
-### Key Findings
-1.  **High-Value Pareto Distribution (The 66% Factor):** The "3 - High LTV" segment constitutes approximately **$25\%$** of the unique customer base but is responsible for a massive **$66.0\%$** of all net totals ($135.6M). This single finding anchors the need for a premium, retention-first business model.
-2.  **The Middle-Ground Engine:** The "2 - Mid LTV" segment, while smaller in revenue percentage (32.3%), represents the **bulk of your active customer population (nearly $25k$ unique individuals)**. This segment has the greatest potential for upscaling via targeted lifecycle marketing.
-3.  **Low-End Scale with Minimal Contribution:** The "1 - Low LTV" group has a customer count identical to the High-LTV group (a quirk of percentile splitting, but useful for comparison), yet their combined net total is only **$2.1\%$** of revenue ($4.3M). Their average lifetime spend is just **$347**.
+---
 
-### High-Value Business Insights
-1.  **Revenue Vulnerability vs. Operational Cost:** The company relies almost exclusively on the top quartile of its customers for profitability. This is a potential risk: any competitive threat or churn within this group will significantly impact net profit. However, these customers likely cost the least to support on a per-revenue-dollar basis, offering the highest operational efficiency.
-2.  **The Missed Upsell Opportunity:** The "Mid LTV" segment is highly diversified (the largest group). The monetisation gap between a $2,682 average (Mid) and a $10,961 average (High) is substantial. The business must shift resources from low-end acquisition to "Monetisation and Cross-selling" for this Mid-tier engine to maximize profitability.
-3.  **Low-End "Market Friction":** While the "Low LTV" customers contribute negligible revenue, they consume customer support resources, marketing bandwidth, and operational logistics. They likely came in via deep discounts and bought only one or two small items. The strategy here should be about automated "re-activation or off-boarding" rather than active engagement.
+## Key Findings
 
-***
+1. **High-Value Pareto Distribution (The 66% Factor):**  
+   The "3 - High LTV" segment constitutes approximately 25% of the unique customer base but is responsible for 66.0% of all net totals ($135.6M). This finding strongly supports a premium, retention-first business strategy.
 
-### Actionable Marketing Strategy for Low-LTV Customers
-*Dealing with customers who make up $25\%$ of your base but only $2.1\%$ of revenue requires an automated, low-cost approach to either upscale them or minimise their resource consumption.*
+2. **The Middle-Ground Revenue Engine:**  
+   The "2 - Mid LTV" segment, while smaller in revenue share (32.3%), represents the largest active customer population (nearly 25k unique customers). This segment presents the strongest opportunity for upselling and lifecycle marketing.
 
-**Objective: Move or Minimise**
+3. **Low-End Scale with Minimal Contribution:**  
+   The "1 - Low LTV" segment has a customer count nearly identical to the High-LTV group due to percentile-based segmentation, yet contributes only 2.1% of total revenue ($4.3M). Their average lifetime spend is just $347.
 
-1.  **Automation of Lifecycle (Low-Cost Upscaling):**
-    * **Strategy:** Never target these customers with high-cost advertising (like paid social retargeting). Use $100\%$ free/low-cost channels like automated email lifecycle triggers.
-    * **Action:** Implement an "Upsell trigger sequence" for any customer who places an initial order under $500. The emails should *only* focus on upgrading them to higher-value product categories (e.g., Audio -> TV/Video). If they don't respond to three automated attempts within 6 months, off-board them from marketing communications.
+## Strategic Business Insights
 
-2.  **"High-Basket" First Purchase Requirement:**
-    * **Strategy:** If a large portion of this low-end group is new acquisition, adjust entry-level marketing.
-    * **Action:** Remove entry-level or loss-leader products from prominent display on the homepage for new traffic. Instead, enforce minimum-order-value discounts (e.g., "$10\%$ off orders over $250" instead of "Free shipping on orders over $50"). This stops the acquisition of new "single-item, low-value" customers at the source.
+1. **Revenue Vulnerability vs Operational Efficiency:**  
+   The company depends heavily on the top quartile of customers for profitability. Any increase in churn within this segment would significantly impact revenue performance. However, these customers likely generate the highest operational efficiency relative to support cost.
 
-3.  **Service Friction Management (Operational Efficiency):**
-    * **Strategy:** These customers often have the highest support requests relative to their revenue contribution. Reduce the burden on live support agents.
-    * **Action:** Ensure the support funnel for low-cost categories (Audio, Toys, etc.) is heavily automated via Chatbots, Help Center FAQs, and self-service return portals. Reserve live agent bandwidth strictly for high-monetization inquiries or high-tier LTV accounts.
+2. **The Missed Upsell Opportunity:**  
+   The monetization gap between Mid LTV customers ($2,682 average spend) and High LTV customers ($10,961 average spend) is substantial. Strategic cross-selling and personalized lifecycle campaigns could significantly increase customer value.
 
+3. **Low-End Market Friction:**  
+   Low-LTV customers contribute minimal revenue while still consuming customer support resources, marketing bandwidth, and logistics capacity. A low-cost automated engagement strategy is more economically sustainable than high-touch retention efforts.
 
-### 2. Cohort Analysis
+---
 
-- Tracked revenue and customer count per cohorts
-- Cohorts were grouped by year of first purchase
-- Analyzed customer retention at a cohort level
+## Actionable Marketing Strategy for Low-LTV Customers
+
+*Managing customers who represent 25% of the customer base but only 2.1% of revenue requires a highly automated and operationally efficient approach.*
+
+### Objective: Move or Minimize
+
+1. **Automated Lifecycle Upscaling**
+   - **Strategy:** Avoid high-cost advertising for low-value customers. Focus on automated, low-cost communication channels such as email sequences.
+   - **Action:** Implement automated upsell campaigns for customers whose first purchase is below $500. Campaigns should encourage migration into higher-value product categories. Customers showing no engagement after multiple attempts should be removed from active marketing flows.
+
+2. **High-Basket First Purchase Strategy**
+   - **Strategy:** Reduce acquisition of low-value one-time buyers at the source.
+   - **Action:** Shift promotions toward minimum-order-value incentives such as "10% off orders above $250" instead of low-threshold offers like "Free shipping over $50."
+
+3. **Operational Efficiency Through Support Automation**
+   - **Strategy:** Minimize live-support costs for low-monetization customer groups.
+   - **Action:** Use chatbots, self-service return systems, FAQs, and automated support flows for low-value product categories while prioritizing live support for high-LTV customers.
+
+---
+
+# 2. Cohort Analysis
+
+- Tracked revenue and customer counts across cohorts.
+- Grouped cohorts by year of first purchase.
+- Analyzed long-term revenue generation and customer acquisition performance over time.
 
 💻 Query: [2_cohort_analysis.sql](/2_cohort_analysis.sql)
 
-#### Visualization
+## Visual Analysis
 
 ![Cohort Analysis](/images/2_cohort_analysis.png)
-> This visualization tracks initial customer revenue across ten years. By applying a quadratic polynomial fit, the analysis highlights a non-linear decline, capturing the accelerating drop-off in recent cohorts. This data-driven approach identifies a shift in customer value, essential for strategic recalibration of acquisition spending.
 
-#### Key Findings
+> This visualization tracks customer revenue generation across ten years of acquisition cohorts. By applying a quadratic polynomial fit, the analysis captures the accelerating decline in recent cohort performance and highlights a meaningful shift in customer value generation patterns.
 
-1. **Explosive Growth Phases (2018-2019 & 2022):** The business experienced two significant "scaling" events. In 2019, revenue peaked at **$\$22.3\text{M}$** from **$7,755$** new customers. This was followed by a massive acquisition surge in 2022, bringing in a record **$9,010$** new customers, though revenue remained slightly below the 2019 peak at **$\$20.6\text{M}$**.
-    
-2. **The 2020 Market Contraction:** There was a sharp and visible drop in both customer acquisition and revenue in 2020. Acquisition fell by over **$60\%$** compared to the previous year, suggesting a significant external market disruption or a pivot in business strategy that year.
-    
-3. **Revenue vs. Volume De-coupling:** While the number of customers in 2022 was **$16\%$** higher than in 2019, the total revenue generated was **$7\%$** lower. This indicates that while the company was able to acquire more customers, the value per individual customer was lower than in previous years.
-    
+---
 
-#### High-Value Business Insights
+## Key Findings
 
-1. **Acquisition Quality Dilution:** The "Average Revenue per Customer" (ARPU) for new cohorts has seen a general decline, dropping from a high of **$\$3,034$** in 2016 to **$\$2,043$** in 2023. This suggests that the current growth strategy is prioritized on **market share (volume)** over **premium acquisition (value)**. To maintain margins, the company should investigate if marketing spend is being allocated to lower-value channels.
-    
-2. **High-Value Retention Potential (2015-2017):** The earliest cohorts (2015-2017) demonstrated the highest individual spend per customer ($\sim\$3\text{k}$). These "legacy" segments are likely the company's most loyal and profitable base. A dedicated loyalty program targeting these high-spending archetypes could yield a higher ROI than aggressive new acquisition.
-    
-3. **Scaling Efficiency (The "2022 Strategy"):** The return to high-volume acquisition in 2022 after the 2020 slump shows strong recovery capability. However, the subsequent drop in 2023 and 2024 (partially due to incomplete year data) suggests that the company needs to stabilize its acquisition costs. If the cost to acquire the 9,010 customers in 2022 was high, the decreasing individual spend per customer could lead to a negative Customer Lifetime Value (LTV) to Acquisition Cost (CAC) ratio.
+1. **Explosive Growth Phases (2018–2019 and 2022):**  
+   The business experienced two major scaling periods. In 2019, revenue peaked at $22.3M from 7,755 new customers. In 2022, acquisition volume reached a record 9,010 customers, although total revenue remained slightly below the 2019 peak at $20.6M.
 
-### 3. Retention Analysis
+2. **The 2020 Market Contraction:**  
+   Customer acquisition and revenue both declined sharply in 2020. Acquisition volume dropped by more than 60% compared to the previous year, suggesting either an external market disruption or a strategic business shift.
+
+3. **Revenue vs Volume De-Coupling:**  
+   Although customer acquisition volume in 2022 was 16% higher than in 2019, total revenue was approximately 7% lower. This suggests declining customer value despite increased acquisition scale.
+
+## Strategic Business Insights
+
+1. **Acquisition Quality Dilution:**  
+   Average revenue per customer (ARPU) declined from approximately $3,034 in 2016 to $2,043 in 2023. This suggests the business may be prioritizing acquisition volume over premium customer quality.
+
+2. **High-Value Retention Potential:**  
+   The earliest cohorts (2015–2017) demonstrated the highest average customer spend (~$3k per customer). These cohorts likely represent the most loyal and profitable customer archetypes and should be prioritized in loyalty initiatives.
+
+3. **Scaling Efficiency Risk:**  
+   While the company demonstrated strong acquisition recovery in 2022, declining spend per customer may create long-term pressure on profitability if acquisition costs continue rising.
+
+---
+
+# 3. Retention Analysis
 
 💻 Query: [3_retention_analysis.sql](/3_retention_analysis.sql)
 
-#### Visualization
+## Visual Analysis
 
 ![Retention Analysis](/images/3_retention_analysis.png)
-> Cohort Retention Dynamics (2015–2023) This analysis quantifies long-term loyalty by segmenting cohorts into active and churned status (defined as 6+ months of inactivity). While acquisition volume peaked in 2022, the consistent 90%+ churn rate across a decade identifies a critical business opportunity for post-purchase re-engagement and lifecycle marketing.
 
-### Key Findings
+> This retention analysis measures long-term customer loyalty by segmenting cohorts into active and churned groups using a 6+ month inactivity threshold. Despite strong acquisition growth in certain years, the consistently high churn rate reveals a major opportunity for lifecycle marketing and post-purchase engagement strategies.
 
-1. **Low Baseline Retention:** Across all cohorts from 2015 to 2023, the retention rate remains consistently below **$11\%$**. This indicates that the business model relies heavily on one-time purchasers rather than repeat customers.
-    
-2. **Stability in Churn Rates:** Despite fluctuations in the total number of customers acquired (with a significant peak in 2022), the ratio of active-to-churned customers has remained remarkably stable, fluctuating only between **$8.4\%$ and $10.4\%$**.
-    
-3. **Scale vs. Retention (2022 Peak):** The 2022 cohort was the largest in history with over **9,000 customers**. Interestingly, it also achieved the highest retention rate in the dataset at **$10.4\%$**, suggesting that the high-volume acquisition year also brought in slightly higher-quality leads.
-    
+---
 
-### Business Insights
+## Key Findings
 
-1. **The "Leaky Bucket" Challenge:** The business is highly efficient at acquisition (as seen in the 2018, 2019, and 2022 volume spikes) but struggles to retain those users beyond the 6-month window. This suggests that the **post-purchase experience** or the product's natural replacement cycle needs to be addressed.
-    
-2. **Untapped Value in Churned Segments:** With over **$42,000$ customers classified as churned** across all cohorts, there is a massive opportunity for "Win-Back" or "Re-activation" campaigns. Re-acquiring a past customer is statistically cheaper than acquiring a new one; focusing on even a $5\%$ re-activation rate could nearly double the current active base.
-    
-3. **Product-Market Fit for Retention:** The consistent $90\%+$ churn rate across a decade suggests that the product may be a "one-off" purchase (durable goods) rather than a recurring need. If the goal is to increase LTV, the business should consider introducing complementary consumables, accessories, or a subscription-based service to provide a reason for customers to return.
+1. **Low Baseline Retention:**  
+   Across all cohorts between 2015 and 2023, retention rates remained below 11%, indicating strong dependence on one-time purchasers rather than recurring customers.
+
+2. **Stable Churn Dynamics:**  
+   Despite significant fluctuations in acquisition volume, the active-to-churned ratio remained relatively stable between 8.4% and 10.4%.
+
+3. **Scale vs Retention (2022 Peak):**  
+   The 2022 cohort was both the largest in company history and the cohort with the highest retention rate (10.4%), suggesting slightly stronger acquisition quality during that growth period.
+
+## Strategic Business Insights
+
+1. **The "Leaky Bucket" Problem:**  
+   The company is effective at customer acquisition but struggles to maintain long-term engagement beyond the 6-month activity window. This points to weaknesses in post-purchase engagement or natural product replacement cycles.
+
+2. **Untapped Value in Churned Customers:**  
+   More than 42,000 customers were classified as churned across all cohorts. Re-activation campaigns targeting even a small percentage of these users could substantially expand the active customer base.
+
+3. **Product-Market Fit and Retention:**  
+   The consistently high churn rate suggests many products may behave as one-time purchases rather than recurring needs. Increasing LTV may require complementary products, subscription models, or recurring-service offerings.
+
+---
 
 ## Strategic Recommendations
 
-1. Customer Value Optimization (Customer Segmentation)
+### 1. Customer Value Optimization (Customer Segmentation)
 
-    - Launch VIP program for 12,372 high-value customers (66% revenue)
-    - Create personalized upgrade paths for mid-value segment ($66.6M → $135.4M opportunity)
-    - Design price-sensitive promotions for low-value segment to increase purchase frequency
+- Launch a VIP retention program for the 12,372 high-value customers responsible for 66% of total revenue.
+- Create personalized upgrade paths for the Mid-LTV segment to increase customer monetization.
+- Design low-cost automated promotions for the Low-LTV segment to selectively increase purchase frequency without increasing operational overhead.
 
-2. Cohort Performance Strategy (Customer Revenue by Cohort)
+### 2. Cohort Performance Strategy (Revenue by Cohort)
 
-    - Target 2022–2024 cohorts with personalized re-engagement offers
-    - Implement loyalty/subscription programs to stabilize revenue fluctuations
-    - Apply successful strategies from high-spending 2016–2018 cohorts to newer customers
+- Target 2022–2024 cohorts with personalized re-engagement campaigns.
+- Implement loyalty or subscription-based programs to stabilize long-term revenue.
+- Replicate successful acquisition strategies from high-performing 2016–2018 cohorts.
 
-3. Retention & Churn Prevention (Customer Retention)
+### 3. Retention and Churn Prevention
 
-    - Strengthen first 1–2 year engagement with onboarding incentives and loyalty rewards
-    - Focus on targeted win-back campaigns for high-value churned customers
-    - Use predictive churn intervention system before customer lifecycle lapse
+- Strengthen customer engagement during the first 12 months through onboarding incentives and loyalty rewards.
+- Prioritize win-back campaigns for previously high-value churned customers.
+- Develop predictive churn monitoring systems to identify at-risk customers before inactivity occurs.
+
+---
 
 ## Technical Details
 
-- **Database**: PostgreSQL
-- **Analysis tools**: PostgreSQL, DBeaver, PGAdmin 9.0
-- **Visualization**: Seaborn (python) + Gemini 3.1
+- **Database:** PostgreSQL
+- **Analysis Tools:** PostgreSQL, DBeaver, pgAdmin 4
+- **Visualization:** Python (Seaborn, Matplotlib)
+- **Learning Source:** Intermediate SQL course by [Luke Barousse](https://github.com/lukebarousse).
+    - [Link to video](https://www.youtube.com/watch?v=QKIGsShyEsQ)
+- **Focus Areas:** Business Analytics, Customer Segmentation, Retention Analysis, Cohort Analysis
 
+---
+
+## Acknowledgements
+
+This project was completed as part of my Intermediate SQL learning journey based on the excellent educational content created by [Luke Barousse](https://github.com/lukebarousse)
+
+The overall analytical structure, business scenarios, and core SQL concepts presented in this repository were inspired by and developed from the material taught in his Intermediate SQL course. While I independently reproduced the analyses, wrote and practiced the queries myself, created the visualizations, and expanded the business interpretation layer, full credit belongs to Luke Barousse for the original instructional framework and teaching methodology.
+
+This repository represents my personal implementation and learning process built upon the foundations provided in the course, which significantly strengthened my understanding of:
+- PostgreSQL analytics
+- Window functions and CTEs
+- Cohort and retention analysis
+- Business-oriented SQL workflows
+- Analytical thinking and reporting
+
+I am deeply grateful for the quality, clarity, and accessibility of the educational material, which played an important role in my continued transition into data engineering and analytics.
