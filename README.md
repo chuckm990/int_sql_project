@@ -128,11 +128,27 @@ Analysis of customer behavior, retention, and lifetime value for an e-commerce c
 
 ## Strategic Recommendations
 
-1. 
+1. Customer Value Optimization (Customer Segmentation)
+
+    - Launch VIP program for 12,372 high-value customers (66% revenue)
+    - Create personalized upgrade paths for mid-value segment ($66.6M → $135.4M opportunity)
+    - Design price-sensitive promotions for low-value segment to increase purchase frequency
+
+2. Cohort Performance Strategy (Customer Revenue by Cohort)
+
+    - Target 2022–2024 cohorts with personalized re-engagement offers
+    - Implement loyalty/subscription programs to stabilize revenue fluctuations
+    - Apply successful strategies from high-spending 2016–2018 cohorts to newer customers
+
+3. Retention & Churn Prevention (Customer Retention)
+
+    - Strengthen first 1–2 year engagement with onboarding incentives and loyalty rewards
+    - Focus on targeted win-back campaigns for high-value churned customers
+    - Use predictive churn intervention system before customer lifecycle lapse
 
 ## Technical Details
 
 - **Database**: PostgreSQL
-- **Analysis tools**: PostgreSQL
+- **Analysis tools**: PostgreSQL, DBeaver, PGAdmin 9.0
 - **Visualization**: Seaborn (python) + Gemini 3.1
 
