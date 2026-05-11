@@ -15,6 +15,8 @@
 
 ---
 
+![Project_Cover](/images/project_cover.png)
+
 ## Overview
 
 Analysis of customer behavior, retention, and lifetime value for an e-commerce company to improve customer retention and maximize revenue.
@@ -59,11 +61,15 @@ This project was completed as part of my Intermediate SQL learning journey using
 
 ## Visual Analysis
 
-![Customer Segmentation](/images/1_customer_segmentation_donut_chart.png)
+<p align="center">
+  <img src="/images/1_customer_segmentation_donut_chart.png" width="60%">
+</p>
 
 > The top quartile of customers ("High LTV") generates over 65% of company revenue, highlighting a critical dependence on a small premium segment.
 
-![Strategic LTV Analysis](/images/1_customer_segmentation_strategic_ltv_analysis.png)
+<p align="center">
+  <img src="/images/1_customer_segmentation_strategic_ltv_analysis.png" width="60%">
+</p>
 
 > This Pareto analysis confirms that High and Mid LTV tiers combined constitute nearly 98% of company value, visually supporting a strategy of automated-only engagement for the low-performing Low-LTV segment.
 
@@ -123,7 +129,9 @@ This project was completed as part of my Intermediate SQL learning journey using
 
 ## Visual Analysis
 
-![Cohort Analysis](/images/2_cohort_analysis.png)
+<p align="center">
+  <img src="/images/2_cohort_analysis.png" width="60%">
+</p>
 
 > This visualization tracks customer revenue generation across ten years of acquisition cohorts. By applying a quadratic polynomial fit, the analysis captures the accelerating decline in recent cohort performance and highlights a meaningful shift in customer value generation patterns.
 
@@ -159,7 +167,9 @@ This project was completed as part of my Intermediate SQL learning journey using
 
 ## Visual Analysis
 
-![Retention Analysis](/images/3_retention_analysis.png)
+<p align="center">
+  <img src="/images/3_retention_analysis.png" width="60%">
+</p>
 
 > This retention analysis measures long-term customer loyalty by segmenting cohorts into active and churned groups using a 6+ month inactivity threshold. Despite strong acquisition growth in certain years, the consistently high churn rate reveals a major opportunity for lifecycle marketing and post-purchase engagement strategies.
 
